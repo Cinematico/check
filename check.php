@@ -1,25 +1,14 @@
 <?php
-/* If you see this text, it means that your server is not running PHP, which means that you can’t run Cinematico. Ask your system administrator to install PHP. */
+/* If you see this text, it means that your server is not running PHP, which means that you canâ€™t run Cinematico. Ask your system administrator to install PHP. */
 ?>
 <?php
-  $is_ready = true;
-
-  if (version_compare(PHP_VERSION, '5.3.6', '>=') != true)
-    $is_ready = false;
-
-  $have_rewrite = apache_is_module_loaded('mod_rewrite');
-  if ($have_rewrite != true)
-    $is_ready = false;
-
-  if ( ! function_exists('preg_match'))
-     $is_ready = false;
-
-  if ( ! @preg_match('/^.$/u', 'ñ'))
-    $is_ready = false;
-
-  if ( ! @preg_match('/^\pL$/u', 'ñ'))
-    $is_ready = false;
-
+    $is_ready = true;
+    
+    if (version_compare(PHP_VERSION, '5.3.6', '>=') != true) $is_ready = false;
+    
+    $have_rewrite = apache_is_module_loaded('mod_rewrite');
+    
+    if ($have_rewrite != true) $is_ready = false;
 ?>
 <!doctype html>
 <html>
@@ -114,39 +103,12 @@
             <h3>PHP Version</h3>
             <?php if (version_compare(PHP_VERSION, '5.3', '>=')): ?>
             <ul>
-                <li class="pass">Pass: <?php echo PHP_VERSION ?></li>
+                <li class="pass">Pass</li>
             </ul>
             <?php else: $failed = TRUE ?>
             <ul>
                 <li class="fail">Failed: <?php echo PHP_VERSION ?></li>
                 <li class="note">Cinematico requires PHP 5.3 or newer.</li>
-            </ul>
-            <?php endif ?>
-            
-            <hr>
-            
-            <h3>PCRE UTF-8</h3>
-            <?php if ( ! function_exists('preg_match')): $failed = TRUE ?>
-            <ul>
-                <li class="fail">Failed</li>
-                <li class="fail">PCRE support is missing.</li>
-                <li class="note">Ask your system administrator to add <a href="http://php.net/pcre" target="_blank">PCRE</a> support to your server.</li>
-            </ul>
-            <?php elseif ( ! @preg_match('/^.$/u', 'ñ')): $failed = TRUE ?>
-            <ul>
-                <li class="fail">Failed</li>
-                <li class="fail">No UTF-8 support</li>
-                <li class="note"><a href="http://php.net/pcre" target="_blank">PCRE</a> has not been compiled with UTF-8 support.</li>
-            </ul>
-            <?php elseif ( ! @preg_match('/^\pL$/u', 'ñ')): $failed = TRUE ?>
-            <ul>
-                <li class="fail">Failed</li>
-                <li class="fail">No Unicode support</li>
-                <li class="note"><a href="http://php.net/pcre" target="_blank">PCRE</a> has not been compiled with Unicode property support.</li>
-            </ul>
-            <?php else: ?>
-            <ul>
-                <li class="pass">Pass</li>
             </ul>
             <?php endif ?>  
             
@@ -186,34 +148,10 @@
             <?php endif ?>
             
             <hr>
-
-            <h3>GD Library</h3>
-            <?php $gd = gdversion(); ?>
-            <?php if ($gd): ?>
-            <ul>
-                <li class="pass">Pass</li>
-            </ul>
-            <?php elseif ($gd == null): ?>
-            <ul>
-                <li class="unknown">Unknown</li>
-                <li class="note">We could not determine if GD Library was enabled or not</li>
-            </ul>
-            <?php else: ?>
-            <ul>
-                <li class="fail">Missing</li>
-                <li class="note">You will still be able to use Cinematico, you just won't be able to use any image manipulation features.</li>
-            </ul>
-            <?php endif ?>
         </div>
     </body>
 </html>
 <?php
-    function gdversion() {
-        $gd = gd_info();
-        $ver = $gd['GD Version'];
-        return $ver;
-    }
-    
     function apache_is_module_loaded($mod_name) {
         if (function_exists('apache_get_modules')) {
             $modules = apache_get_modules();
